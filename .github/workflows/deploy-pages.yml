@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: '24'
       - name: Test financial model
-        run: node --test --test-isolation=none tests/model.test.js
+        run: node --test --test-isolation=none tests/*.test.js
       - name: Prepare static website
         run: |
           mkdir -p _site

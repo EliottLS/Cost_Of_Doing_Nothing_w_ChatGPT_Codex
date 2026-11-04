@@ -1,55 +1,50 @@
 # Salesforce Value Studio
 
-Independent interview demo for an SMB & Growth Account Executive conversation. Fictional Australian SMB, AUD excluding GST, and explicitly illustrative pricing and assumptions. No affiliation with or endorsement by Salesforce.
+Independent interview demo for an SMB & Growth AE conversation. One shared Suite investment, with separate Sales and Service value streams and a combined financial business case. Fictional Australian SMB, AUD excluding GST, and supplied/illustrative pricing; not affiliated with or endorsed by Salesforce.
 
-## Run
+## Run and deploy
 
 Requires Node.js 20+; no dependencies or credentials.
 
 ```sh
 npm start
+npm test
 ```
 
-The server listens on port 3000 (override with `PORT`). Run `npm test` for financial-model tests. Deploy the static `index.html`, `style.css`, `app.js`, and `model.js` files together to any static website host. Google Fonts are optional; system fonts provide a fallback.
+Port 3000, override with `PORT`. Deploy `index.html`, `style.css`, `app.js`, and `model.js` together to any static host. The GitHub Pages workflow on `main` runs the financial tests, uploads only those four assets, and deploys them. The repository must use GitHub Actions as its Pages source. Google Fonts are optional; system fonts provide fallback.
 
-## Demo
+## Three guided areas
 
-Choose Service Cloud or Sales Cloud, edit the baseline and improvement assumptions, compare scenarios, and switch monthly/quarterly/yearly reporting. The second tab contains six navigable presentation slides, separate talking tracks, discovery questions, and a follow-up email. Print / save PDF produces all six slides with presenter notes. This version does not export a .pptx file or call a generative AI service. Customer inputs persist locally in the browser; reset restores the example. Avoid entering sensitive customer data on a shared device.
+1. **Shared investment:** core Suite (Starter A$35/user/month, Pro A$140, or custom), unique billed users, one implementation and ramp, customer-facing AI, employee AI, cost allocation and overlap review. Colour-coded steps with inclusion controls.
+2. **Value analysis:** distinct Sales and Service inputs, scenarios, opportunities before shared investment, and net after allocated recurring costs. Each stream can be included independently. Core and employee licence seats never come from adding the two team headcounts.
+3. **Business case & deck:** combined annual net, first-year net, payback, cost of delay, six navigable slides, separate talking tracks, discovery questions and follow-up email. PDF printing includes all six slides with presenter notes. No .pptx export or external generative AI service.
 
-## Financial conventions
+Inputs persist in local browser storage. Reset restores the fictional example. Earlier team inputs are retained where possible; the new shared commercial configuration starts from explicit defaults and should be reviewed. Old per-team subscription and implementation inputs are ignored by the combined case. Avoid sensitive data on a shared device.
 
-Service: AI resolutions = monthly tickets × AI-offered share × resolution success. Released hours combine avoided human handling of those resolutions with efficiency improvements on all remaining tickets. AI billing is independent of successful resolution: conversations charge all eligible AI interactions; Flex Credits charge interactions × actions per interaction × credits per action. Repeat interactions and escalated tickets remain chargeable. AI cost per resolution divides AI usage and licence costs by successfully resolved tickets.
+## Financial model
 
-Sales: released admin hours use 52/12 weeks per month. Incremental revenue = monthly qualified opportunities × percentage-point win-rate improvement × deal revenue; gross margin converts this to profit. Win rate is capped at 100%.
+`calculateCase` is the application model; it uses `calculate` to measure each team's workload and financial benefits.
 
-Only the explicitly realisable percentage of capacity value is cash savings. Net monthly benefit = realisable labour savings + incremental gross profit − core subscription − AI licences − AI usage. Remaining capacity is shown separately and never added to financial benefit. Scenarios scale efficiency and AI-offered share or sales conversion uplift by 0.65 / 1 / 1.25, with percentage caps.
+- Sales released admin hours use 52/12 weeks/month. Additional revenue = opportunities × percentage-point win-rate uplift × deal value; gross margin converts revenue to gross profit. Win rate is capped at 100%.
+- Service released hours combine successful AI resolutions with handling efficiency on remaining tickets, avoiding double-counting. Eligible customer conversations are charged even when escalated. Removing resolution benefits does not remove conversation charges.
+- Capacity is operational value. Only the entered realisable percentage becomes labour cash savings. Financial benefit = cash savings + incremental gross profit.
+- Shared employee actions = the sum of distinct activity estimates from included teams: reps × working days × (CRM updates + record lookups + workflow actions/day) × AI execution share. Check duplicate employee activities manually; a shared person may work in both teams but each chargeable action should appear once. Activity estimates do not automatically create more savings.
+- Combined benefit subtracts the entered duplicate-benefit amount, capped at available benefit. The deduction is distributed proportionately between value streams. A separate duplicate-hours deduction affects combined capacity only. Review both to avoid inconsistent assumptions.
+- Combined net = adjusted Sales benefit + adjusted Service benefit − one Suite subscription − one unique employee AI licence pool − customer and employee usage.
+- Allocate all recurring costs for team reporting by headcount or a custom percentage. Allocation never changes combined net or billed seats. A sole included stream gets 100%; with both excluded, shared costs remain unallocated. Team annual allocated net excludes implementation; combined first-year net includes it once.
+- First-year net = steady-state net × (12 − ramp months) − fixed licence costs during ramp − one implementation. Assume no benefits or metered usage during ramp. Payback includes ramp fixed costs plus implementation and requires positive monthly net. One common ramp is a simplifying assumption.
+- Three-month combined cost of delay = positive steady-state net × 3. Team views instead show three months of foregone opportunity **before shared investment**; do not add independently calculated net ROI claims.
 
-Year one assumes zero benefits and zero usage during the chosen ramp, while core subscription and AI licence costs continue, and subtracts implementation once. Payback includes ramp fixed subscription/licence costs and implementation, then divides by positive steady-state monthly net benefit. A three-month delay is positive steady-state monthly net benefit × 3; it is a discussion prompt, not a forecast. Taxes, financing, discount rates, retention, seasonality, and complex rollout curves are outside this model. Validate attribution to avoid overlapping sales benefits.
+Scenarios scale efficiency and customer AI-offered share or Sales conversion uplift by 0.65 / 1 / 1.25 with percentage caps. Other inputs remain fixed. Taxes, financing, discounting, complex rollout curves and seasonality are excluded.
 
-## Agentforce commercial assumptions
+## Commercial references and qualifications
 
-User-supplied Australian list prices (November 2026), not independently verified here: AU$700 / 100,000 Flex Credits, 20 credits per standard action (AU$0.14); AU$2.80 per eligible conversation; AU$175 per employee per month; AU$7 per Agentforce user per month plus Flex Credits. Foundations has no additional platform fee for eligible customers; the Foundations scenario models usage via Flex Credits. Core cloud subscription is separate. Verify eligibility, inclusions, actual billing definitions and negotiated terms with Salesforce.
+User-supplied Australian references (November 2026), not independently verified here: Starter Suite A$35/user/month; Pro Suite A$140; conversations A$2.80 each; Flex Credits A$700 per 100,000, with 20 credits per standard action (A$0.14/action). Flex costs are pro rata estimates, not rounded pack purchases.
 
-The five pricing options are alternative scenarios, not automatically interchangeable offers. Employee add-on assumes no extra metered charge; confirm entitlements. Flex estimates are pro rata consumption, not rounded pack purchases. No extra escalation labour penalty is assumed; escalated tickets remain in human workload. Storage schema v2 starts fresh rather than carrying forward obsolete per-resolution pricing assumptions.
+Employee options:
 
-## Guided simulation and Suite Plans
+- Agentforce User Licence: A$7/unique user/month plus Flex Credits; limited CRM objects and deployed-agent access.
+- Employee AI Add-on: A$175/unique user/month alongside compatible CRM licences; qualifying employee-agent usage is unmetered. Other services, such as Data 360, can be entered separately.
+- Coworker User Licence: a distinct US$50/user/month reference. AUD-per-USD is editable (1.5 default is illustrative, not live FX). Enter additional service/usage costs manually; no inclusion or free usage is assumed.
 
-The four colour-coded input steps show one panel at a time, with direct step buttons and Previous/Next navigation. Include checkboxes control baseline benefits, improvements, Agentforce, and core investment separately. Removing baseline or improvements removes the associated benefits but leaves separately included costs. Removing Agentforce removes its actions, AI charges and autonomous resolutions; core workflow efficiency remains. Removing investment removes core licences, implementation and ramp; AI costs remain. Capacity realisation belongs to the improvement step.
-
-Flex Credits default to an editable activity estimate: reps × working days × (CRM updates + record lookups + workflow actions per rep/day) × AI execution share. Each standard action uses 20 credits; 100,000 credits cost A$700, or A$0.14/action. Service defaults: 8 reps × 21 days × 32 actions/day × 50% = 2,688 actions, 53,760 credits, A$376.32/month. Sales defaults: 12 reps × 21 days × 22 actions/day × 50% = 2,772 actions, 55,440 credits, A$388.08/month. These are rough illustrative activity assumptions, not measured benchmarks. They are an alternative to interaction-based action estimation, never added on top. Action estimates do not automatically establish corresponding time or conversion benefits; validate those separately.
-
-Core licence pricing supports custom monthly subscription, Starter Suite at A$35/user/month, and Pro Suite at A$140/user/month. Per-user rates and seat counts are editable; switching plans restores the supplied list rate. Core Suite Plans and Agentforce pricing remain separate. Confirm feature availability, Agentforce eligibility, entitlements and contractual terms before treating a combination as an offer.
-
-## Service Cloud: five separate steps
-
-Service Cloud now orders its simulator as (1) current baseline, (2) potential improvement, (3) core Suite and investment, (4) customer-facing Agentforce conversations, and (5) internal Agentforce usage. Sales Cloud retains its existing four-step flow. Customer and internal AI have independent inclusion checkboxes and their costs add together; a customer-conversation price no longer replaces employee usage costs.
-
-Customer usage is eligible conversations × price per conversation, including escalations. Removing improvement assumptions removes resolution benefits but does not make conversations free. Customer AI cost per successful resolution includes customer-facing charges only, excluding employee licences and usage.
-
-Internal usage offers three user-supplied reference options:
-
-- Agentforce User Licence: A$7/user/month plus Flex Credits estimated from employee daily activities. Limited CRM object access; validate entitlements.
-- Employee AI Add-on: A$175/user/month alongside compatible core CRM licences. Qualifying employee-agent usage is unmetered; an optional amount models separately chargeable services such as Data 360.
-- Coworker User Licence: US$50/user/month as a distinct US-market reference, converted using an editable AUD-per-USD assumption (default 1.5 is illustrative, not live FX). Additional usage/services can be entered manually; no entitlement or free usage is inferred. Australian availability and terms require validation.
-
-For 50 employees, reference licence-only costs are A$350/month or A$8,750/month for the first two options. Max editions are mentioned as a qualification alternative; no invented Max price or inclusion is modelled. Internal usage adds no automatic incremental benefit beyond the handling efficiency assumption in step 2. Existing saved input values are retained where applicable; the obsolete single Service Cloud pricing-model selector is no longer used.
+Max editions are a qualification alternative; no invented Max price or bundled entitlement is assumed. Foundations is noted in the reference table but is not a separate shared Suite offer. A shared platform does not imply every Suite includes both teams' required capabilities or permits shared licence access. Confirm eligibility, functionality, billing definitions, included usage and negotiated terms with Salesforce before treating any combination as a quote.

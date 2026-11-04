@@ -54,3 +54,45 @@ export function calculate(product,v,scenario='base'){
  const payback=net>0?ramp+(implementation+fixedCost*ramp)/net:null;
  return {customerCost,internalLicence,internalUsage,internalActions,internalCredits,coreCost,implementation,ramp,dailyActions,activityActions,interactions,actions,credits,aiLicence,aiCost,fixedCost,offered,resolved,escalated,costPerResolution,humanCostPerTicket,hours,revenue,consumption,baseline,capacity,cash,profit,benefit,recurring,net,yearNet,payback,delay:Math.max(0,net)*3};
 }
+
+// One commercial investment, two independently measured value streams.
+export const sharedDefaults={includeSuite:1,suitePlan:1,suiteUsers:20,suiteRate:35,monthlyCost:1800,implementation:15000,ramp:2,includeCustomer:1,conversationRate:2.8,includeInternal:1,internalModel:0,aiUsers:20,userRate:7,employeeRate:175,coworkerUsdRate:50,audPerUsd:1.5,internalExtraUsage:0,creditsPerAction:20,creditPackPrice:700,creditsPerPack:100000,includeSales:1,includeService:1,allocationMethod:0,salesAllocation:60,overlapBenefit:0,overlapHours:0,overlapReviewed:0};
+export function calculateCase(values,s,scenario='base'){
+ const enabled={sales:s.includeSales!==0,service:s.includeService!==0};
+ const streams={};
+ for(const p of ['sales','service']){
+  const v={...values[p],includeInvestment:0,includeInternal:0,includeAI:p==='service'&&s.includeCustomer!==0?1:0,conversationRate:s.conversationRate};
+  const r=calculate(p,v,scenario);
+  streams[p]=enabled[p]?r:{...r,hours:0,capacity:0,cash:0,profit:0,benefit:0,revenue:0,customerCost:0,offered:0,resolved:0,interactions:0,activityActions:0};
+ }
+ const rawBenefit=streams.sales.benefit+streams.service.benefit;
+ const overlapBenefit=Math.min(rawBenefit,s.overlapBenefit);
+ const hours=Math.max(0,streams.sales.hours+streams.service.hours-s.overlapHours);
+ const benefit=rawBenefit-overlapBenefit;
+ const customerCost=streams.service.customerCost;
+ const actions=s.includeInternal!==0&&s.internalModel===0?streams.sales.activityActions+streams.service.activityActions:0;
+ const credits=actions*s.creditsPerAction;
+ const internalUsage=s.includeInternal===0?0:s.internalModel===0?(s.creditsPerPack>0?credits*s.creditPackPrice/s.creditsPerPack:0):s.internalExtraUsage;
+ const internalLicence=s.includeInternal===0?0:s.aiUsers*(s.internalModel===1?s.employeeRate:s.internalModel===2?s.coworkerUsdRate*s.audPerUsd:s.userRate);
+ const coreCost=s.includeSuite===0?0:s.suitePlan===0?s.monthlyCost:s.suiteUsers*s.suiteRate;
+ const implementation=s.includeSuite===0?0:s.implementation;
+ const ramp=s.includeSuite===0?0:s.ramp;
+ const fixedCost=coreCost+internalLicence;
+ const usage=customerCost+internalUsage;
+ const recurring=fixedCost+usage;
+ const net=benefit-recurring;
+ const yearNet=net*Math.max(0,12-ramp)-fixedCost*ramp-implementation;
+ const payback=net>0?ramp+(implementation+fixedCost*ramp)/net:null;
+ let salesShare=0;
+ if(enabled.sales&&!enabled.service)salesShare=1;
+ else if(enabled.sales&&enabled.service){const headcount=values.sales.reps+values.service.serviceReps;salesShare=s.allocationMethod===1?s.salesAllocation/100:headcount>0?values.sales.reps/headcount:.5;}
+ const shares={sales:salesShare,service:enabled.service?1-salesShare:0};
+ for(const p of ['sales','service']){
+  const r=streams[p];r.allocatedCost=recurring*shares[p];
+  r.overlapAdjustment=rawBenefit>0?overlapBenefit*r.benefit/rawBenefit:0;
+  r.adjustedBenefit=r.benefit-r.overlapAdjustment;
+  r.allocatedNet=r.adjustedBenefit-r.allocatedCost;
+  r.share=shares[p];
+ }
+ return {streams,enabled,rawBenefit,overlapBenefit,hours,benefit,customerCost,actions,credits,internalUsage,internalLicence,coreCost,implementation,ramp,fixedCost,usage,recurring,net,yearNet,payback,delay:Math.max(0,net)*3};
+}
