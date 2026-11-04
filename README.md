@@ -39,3 +39,17 @@ The four colour-coded input steps show one panel at a time, with direct step but
 Flex Credits default to an editable activity estimate: reps × working days × (CRM updates + record lookups + workflow actions per rep/day) × AI execution share. Each standard action uses 20 credits; 100,000 credits cost A$700, or A$0.14/action. Service defaults: 8 reps × 21 days × 32 actions/day × 50% = 2,688 actions, 53,760 credits, A$376.32/month. Sales defaults: 12 reps × 21 days × 22 actions/day × 50% = 2,772 actions, 55,440 credits, A$388.08/month. These are rough illustrative activity assumptions, not measured benchmarks. They are an alternative to interaction-based action estimation, never added on top. Action estimates do not automatically establish corresponding time or conversion benefits; validate those separately.
 
 Core licence pricing supports custom monthly subscription, Starter Suite at A$35/user/month, and Pro Suite at A$140/user/month. Per-user rates and seat counts are editable; switching plans restores the supplied list rate. Core Suite Plans and Agentforce pricing remain separate. Confirm feature availability, Agentforce eligibility, entitlements and contractual terms before treating a combination as an offer.
+
+## Service Cloud: five separate steps
+
+Service Cloud now orders its simulator as (1) current baseline, (2) potential improvement, (3) core Suite and investment, (4) customer-facing Agentforce conversations, and (5) internal Agentforce usage. Sales Cloud retains its existing four-step flow. Customer and internal AI have independent inclusion checkboxes and their costs add together; a customer-conversation price no longer replaces employee usage costs.
+
+Customer usage is eligible conversations × price per conversation, including escalations. Removing improvement assumptions removes resolution benefits but does not make conversations free. Customer AI cost per successful resolution includes customer-facing charges only, excluding employee licences and usage.
+
+Internal usage offers three user-supplied reference options:
+
+- Agentforce User Licence: A$7/user/month plus Flex Credits estimated from employee daily activities. Limited CRM object access; validate entitlements.
+- Employee AI Add-on: A$175/user/month alongside compatible core CRM licences. Qualifying employee-agent usage is unmetered; an optional amount models separately chargeable services such as Data 360.
+- Coworker User Licence: US$50/user/month as a distinct US-market reference, converted using an editable AUD-per-USD assumption (default 1.5 is illustrative, not live FX). Additional usage/services can be entered manually; no entitlement or free usage is inferred. Australian availability and terms require validation.
+
+For 50 employees, reference licence-only costs are A$350/month or A$8,750/month for the first two options. Max editions are mentioned as a qualification alternative; no invented Max price or inclusion is modelled. Internal usage adds no automatic incremental benefit beyond the handling efficiency assumption in step 2. Existing saved input values are retained where applicable; the obsolete single Service Cloud pricing-model selector is no longer used.
